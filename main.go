@@ -1,30 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/abhirambsn/micro-svc/app"
 )
 
 func main() {
-	router := chi.NewRouter()
-	router.Use(middleware.Logger)
-
-	router.Get("/healthz", basicHandler)
-
-	server := &http.Server{
-		Addr: ":3000",
-		Handler: router,
-	}
-
-	err := server.ListenAndServe()
+	appl := app.New()
+	err := appl.Start(context.TODO(), ":3000")
 	if err != nil {
-		fmt.Println("Failed to listen to server", err)
+		fmt.Println("Failed to start app:", err)
 	}
-}
-
-func basicHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hellow, World!!"))
 }
